@@ -11,6 +11,7 @@ leerfichero :: leerfichero (string name, flota & tveh, clientela & tcli) { //le 
    int numvehiculos = 0;
    int capacidad = 0;
    float horastr = 0.0;
+   int periodoplan = 0;
    int id = 0;
    int x = 0;
    int y = 0;
@@ -28,8 +29,10 @@ leerfichero :: leerfichero (string name, flota & tveh, clientela & tcli) { //le 
    fe >> numvehiculos;          //lee el número de vehículos
    fe >> capacidad;             //lee la capacidad de caca vehículo
    fe >> horastr;               //lee las horas de trabajo de cada vehículo
+   fe >> periodoplan;           //lee el número de días que conforman el periodo de planificación
    
    tveh.crearflota(numvehiculos, capacidad, horastr);
+   tveh.setperiodoplanificacion(periodoplan);
    
    fe >> aux;                   //lee la palabra CUSTOMER
    fe >> aux;                   //lee la siguiente línea, también son palabras
@@ -128,6 +131,40 @@ float cliente :: gettrequerido () {
    return trequerido;
 };
 
+int cliente :: getnposibilidades () {
+   return posibilidades.size();
+};
+
+vector <int> cliente :: getposibilidad (int n) {
+   return posibilidades[n];
+};
+
+void cliente :: generarposibilidades (int periodplan) {
+   if (ndiasrecogida == 0) {
+      //no se hace nada, es el origen
+   }
+   else
+      if (ndiasrecogida == 1) {
+         vector <int> aux;
+         for (int i = 0; i < periodplan; i++) {
+            aux.push_back(i+1);
+            posibilidades.push_back(aux);
+            aux.clear();
+         };
+      }
+      else
+         if (ndiasrecogida == periodplan) {
+            vector <int> aux;
+            for (int i = 0; i < periodplan; i++)
+               aux.push_back(i+1);
+            posibilidades.push_back(aux);
+         }
+         else {
+            int diaslibres = periodplan - ndiasrecogida;
+            
+         };
+};
+
 
 /* Clase clientela */
 
@@ -149,6 +186,10 @@ int clientela :: getnclientes () {
 
 cliente clientela :: getcliente (int n) {
    return totalclientes[n];
+};
+
+vector < vector <int> > clientela :: getposibilidadcliente () {
+   return posibilidadcliente;
 };
 
 void clientela :: addcliente (cliente cli) {
@@ -202,6 +243,20 @@ vector <float> clientela :: devolverfilamatrizd (int i) {
 
 float clientela :: devolverdistanciadospuntos (int a, int b) {
    return matrizdistancias[a][b];
+};
+
+void clientela :: generartodaslasposibilidades (int periodplan) {
+   for (int i = 0; i < totalclientes.size(); i++)
+      totalclientes[i].generarposibilidades(periodplan);
+};
+
+void clientela :: seleccionarunaposibilidadporcliente () {
+   srand((unsigned)time(NULL));
+   for (int i = 0; i < totalclientes.size(); i++) {
+      int npos = totalclientes[i].getnposibilidades();
+      int num = rand()%npos;
+      posibilidadcliente.push_back(getposibilidad(num));
+   };
 };
 
 
@@ -262,8 +317,16 @@ void flota :: settotalvehiculos (vector <vehiculo> tv) {
    totalvehiculos = tv;
 };
 
+void flota :: setperiodoplanificacion (int pp) {
+   periodoplanificacion = pp;
+};
+
 vector <vehiculo> flota :: gettotalvehiculos () {
    return totalvehiculos;
+};
+
+int flota :: getperiodoplanificacion () {
+   return periodoplanificacion;
 };
 
 int flota :: getnvehiculos () {
@@ -496,18 +559,153 @@ void ruteo :: mostrarrutaoptima () {
    for (int i = 0; i < rutaoptima.size(); i++) {
       if (vehiculosrutaoptima[i] == 0) {
          cont++;
-         cout << "Día " << cont << endl;
+         cout << endl << "Día " << cont << endl;
       };
       cout << "Ruta numero " << i << ", vehiculo con id " << vehiculosrutaoptima[i] << ":";
       for (int j = 0; j < rutaoptima[i].size(); j++)
          cout << "  " << rutaoptima[i][j].getcid();
       cout << endl << "Coste de la ruta = " << generarcosterutaparcial(rutaoptima[i]) << endl;
-      cout << endl;
    };
 };
 
+/*  Clase ruteo2  */
 
+ruteo2 :: ruteo2 () {
    
+};
+
+ruteo2 :: ruteo2 (flota f, clientela c) {
+   srand((unsigned)time(NULL));
+   laflota = f;
+   laclientela = c;
+   costeruta = 0;
+   int num = laclientela.getnclientes();
+   for (int i = 0; i < num; i++)
+      visitasruta.push_back(0);
+};
+
+void ruteo2 :: generarclientespordia () {
+   vector < vector <int> > posibilidadcliente = laclientela.getposibilidadcliente();
+   int periodo = laflota.getperiodoplanificacion();
+   vector <int> plandia;
+   for (int i = 1; i < periodo+1; i++) {
+      for (int j = 0; j < posibilidadcliente.size(); j++)
+         for (int k = 0; k < posibilidadcliente[j].size(); k++)
+            if (posibilidadcliente[j][k] == i)
+               plandia.push_back(j);
+      clientespordia.push_back(plandia);
+   };
+};
+
+void ruteo2 :: restarvisita (int pos) {
+   visitasruta[pos]--;
+};
+
+int ruteo2 :: visitasrestantesruta () {
+   int aux = 0;
+   for (int i = 0; i < visitasruta.size(); i++) {
+      aux += visitasruta[i];
+   };
+   return aux;
+};
+
+void ruteo2 :: actualizarvisitasruta (int dia) {
+   for (int i = 0; i < laclientela.getnclientes(); i++) {               //por cada cliente
+      for (int j = 0; j < clientespordia[dia].size(); j++)              //compruebo los clientes que hay planificados para ese día
+         if (clientespordia[dia][j] == i)                               //si alguno de los que tocan para ese día coinciden con el cliente que estamos evaluando (i), le doy valor 1
+            visitasruta[i] = 1;
+   };
+};
+
+int ruteo2 :: numeroaleatorio (int size) {
+   if (size == 1)
+      return 0;
+   else
+      if (size == 2)
+         return rand()%2;
+      else
+         return rand()%3;
+};
+
+vector <cliente> ruteo2 :: ordenarposibilidades (int a, vector <cliente> sinordenar) {
+   vector <cliente> sin = sinordenar;
+   vector <cliente> ordenados;
+   float distancia;
+   cliente minimo;
+   int posicion;
+   for (int i = 0; i < sinordenar.size()-1; i++) {  //por si hubiera que tenerlo en cuenta en algún momento, voy a ir eliminando dentro del primer bucle for elementos de sinordenar, así que va a ir siendo cada vez más pequeño
+      float distanciaminima = 999;
+      for (int j = 0; j < sin.size(); j++) {
+         if (a != sin[j].getcid()) {
+            distancia = laclientela.devolverdistanciadospuntos(a, sin[j].getcid());
+            if (distancia < distanciaminima) {
+               distanciaminima = distancia;
+               minimo = sin[j];
+               posicion = j;
+            };
+         };
+      };
+      ordenados.push_back(minimo);
+      sin.erase(sin.begin()+posicion);
+   };
+   return ordenados;
+};
+
+vector <cliente> ruteo2 :: generarposibilidades ()  {
+   int num = laclientela.getnclientes();
+   vector <cliente> aux;
+   for (int i = 1; i < num; i++) {
+      if (visitasruta[i] == 1)
+         aux.push_back(laclientela.getcliente(i));
+   };
+   return aux;
+};
+
+vector <cliente> ruteo2 :: generarrutaparcial (int n) {
+   vehiculo vaux = laflota.getvehiculo(n);
+   float capacidadvehiculo = vaux.getcapacidad();
+   float horastrabajo = vaux.gethorastrabajo();
+   float capacidadaux = 0.0;
+   float horasaux = 0.0;
+   vector <cliente> rutaux;
+   int numcliente = 0;
+   rutaux.push_back(laclientela.getcliente(numcliente));
+   int naleatorio;
+   bool salir = false;
+   while ((capacidadaux < capacidadvehiculo) && (horasaux < horastrabajo) && (visitasrestantesruta() > 0) && (!salir)) {
+      vector <cliente> cliaux = generarposibilidades();
+      if (cliaux.size() > 1)
+         cliaux = ordenarposibilidades(numcliente, cliaux);
+      naleatorio = numeroaleatorio(cliaux.size());
+      if (((horasaux + cliaux[naleatorio].gettrequerido()) <= horastrabajo) && ((capacidadaux + cliaux[naleatorio].getdemanda()) <= capacidadvehiculo)) {
+         rutaux.push_back(cliaux[naleatorio]);
+         restarvisita(cliaux[naleatorio].getcid());
+         capacidadaux += cliaux[naleatorio].getdemanda();
+         horasaux += cliaux[naleatorio].gettrequerido();
+      }
+      else
+         salir = true;
+   };
+   rutaux.push_back(laclientela.getcliente(0));
+   return rutaux;
+};
+
+void ruteo2 :: generarruta () {
+   int contadorvehiculo;
+   for (int i = 1; i < laflota.getperiodoplanificacion()+1; i++) {
+      contadorvehiculo = 0;
+      actualizarvisitasruta(i);
+      while ((contadorvehiculo < laflota.getnvehiculos()) && (visitasrestantesruta() > 0)) {
+         ruta.push_back(generarrutaparcial(contadorvehiculo));
+         vehiculos.push_back(contadorvehiculo);
+         contadorvehiculo++;
+      };
+   };
+   vehiculosparcial = veaux;
+};
+
+
+
 int main () {
    flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    clientela miclientela;     //creo un elemento de la clase clientela que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
