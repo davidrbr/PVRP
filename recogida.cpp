@@ -139,6 +139,42 @@ vector <int> cliente :: getposibilidad (int n) {
    return posibilidades[n];
 };
 
+bool cliente :: comprobarcad (string cad) {
+   if (cad.length() > 1)
+      for (int i = 1; i < cad.length(); i++) {
+        int a, b;
+        char aa, bb;
+        aa = cad[i];
+        bb = cad[i-1];
+        a = aa - '0';
+        b = bb - '0';
+         if (a < b)
+            return false;
+      };
+      
+   return true;
+}
+
+void cliente :: perm (vector<vector<int> > &listado, vector<string> v, string act, int n, int r) {
+   if (n == 0) {
+      if (comprobarcad(act)) {
+         vector <int> aux;
+         for (int i = 0; i < act.length(); i++) {
+            int num = act[i]- '0';
+            aux.push_back(num);
+         }
+         listado.push_back(aux);
+      };
+   }
+   else {
+      for (int i = 0; i < r; i++) {
+         size_t found = act.find(v[i]);
+         if (found == string :: npos)
+           perm(listado, v, act + v[i], n - 1, r);
+      };
+   };
+}
+
 void cliente :: generarposibilidades (int periodplan) {
    if (ndiasrecogida == 0) {
       //no se hace nada, es el origen
@@ -160,8 +196,11 @@ void cliente :: generarposibilidades (int periodplan) {
             posibilidades.push_back(aux);
          }
          else {
-            int diaslibres = periodplan - ndiasrecogida;
-            
+            vector <string> atexto;
+            for (int i = 1; i <= periodplan; i++)
+               atexto.push_back(string(itoa(i)));
+            vector < vector <int> > listadoaux;
+            perm (listadoaux, atexto, "", ndiasrecogida, periodplan);
          };
 };
 
@@ -210,7 +249,6 @@ void clientela :: mostrarclientela () {
       cout << "Número de días de recogida: " << totalclientes[i].getndiasrecogida() << endl;
       cout << "Tiempo requerido en cada recogida: " << totalclientes[i].gettrequerido() << endl;
    };
-   
 };
 
 void clientela :: generarmatrizdistancias () {
@@ -704,10 +742,24 @@ void ruteo2 :: generarruta () {
    vehiculosparcial = veaux;
 };
 
+void ruteo2 :: mostrarruta () {
+   int cont = 0;
+   for (int i = 0; i < rutaoptima.size(); i++) {
+      if (vehiculosrutaoptima[i] == 0) {
+         cont++;
+         cout << endl << "Día " << cont << endl;
+      };
+      cout << "Ruta numero " << i << ", vehiculo con id " << vehiculosrutaoptima[i] << ":";
+      for (int j = 0; j < rutaoptima[i].size(); j++)
+         cout << "  " << rutaoptima[i][j].getcid();
+      cout << endl << "Coste de la ruta = " << generarcosterutaparcial(rutaoptima[i]) << endl;
+   };
+};
+
 
 
 int main () {
-   flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
+   /*flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    clientela miclientela;     //creo un elemento de la clase clientela que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    
    cout << "Introduzca el nombre del fichero de entrada: ";
@@ -723,14 +775,14 @@ int main () {
    
    cout << "Generando matriz de distancias..." << endl;
    miclientela.generarmatrizdistancias();
-   
+   */
    /*
    miclientela.mostrarmatrizdistancias();
    vector <float> cosa = miclientela.devolverfilamatrizd(5);
    for (int i = 0; i < cosa.size(); i++)
       cout << "cosa[" << i << "]: " << cosa[i] << endl;
    */
-   
+   /*
    cout << "Indique el número de iteraciones que desea realizar: ";
    int iteraciones;
    //cin >> iteraciones;
@@ -741,6 +793,30 @@ int main () {
    //miruteo.generarrutatotal();
    miruteo.generarrutaoptima();
    miruteo.mostrarrutaoptima();
+   cout << "Coste de la ruta óptima = " << miruteo.getcosterutaoptima() << endl;
+   return 0;*/
+   
+   flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
+   clientela miclientela;     //creo un elemento de la clase clientela que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
+   
+   cout << "Introduzca el nombre del fichero de entrada: ";
+   string nombre;
+   nombre = "ficheroprueba.txt";
+   
+   cout << endl << "Extrayendo datos del fichero..." << endl;
+   leerfichero lectura (nombre, miflota, miclientela);
+   
+   cout << "Generando matriz de distancias..." << endl;
+   miclientela.generarmatrizdistancias();
+   
+   cout << "Generando calendarios de planificación..." << endl;
+   miclientela.generartodaslasposibilidades();
+   miclientela.seleccionarunaposibilidadporcliente();
+   
+   ruteo2 miruteo(miflota, miclientela);
+   cout << endl << "Generando ruta óptima..." << endl;
+   miruteo.generarruta();
+   miruteo.mostrarruta();
    cout << "Coste de la ruta óptima = " << miruteo.getcosterutaoptima() << endl;
    return 0;
 };

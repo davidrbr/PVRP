@@ -32,6 +32,8 @@ public:
    float gettrequerido ();
    int getnposibilidades ();
    vector <int> getposibilidad (int);
+   bool comprobarcad (string);
+   void perm (vector<vector<int> > &, vector<string>, string, int, int); //se le pasa el vector donde se almacenarán las posibilidades definitivas, periodo de planificación en string (hasta 9), un sting para la recursividad (""), ndíasderecogida, periodo de planificación) 
    void generarposibilidades (int);     //se le pasa el periodo de planificación
 };
 
@@ -159,5 +161,6 @@ public:
    vector <cliente> generarposibilidades ();
    vector <cliente> generarrutaparcial (int);
    void generarruta ();
+   void mostrarruta ();
 };
 
