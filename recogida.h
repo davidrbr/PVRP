@@ -3,6 +3,7 @@
 #include <vector>
 #include <math.h>
 #include <cstdlib>
+#include <sstream>
 
 using namespace std;
 
@@ -57,6 +58,7 @@ public:
    float devolverdistanciadospuntos (int, int);
    void generartodaslasposibilidades (int);
    void seleccionarunaposibilidadporcliente ();
+   void mostrarposibilidadcliente ();
 };
 
 class vehiculo {
@@ -152,10 +154,14 @@ public:
    ruteo2 ();
    ruteo2 (flota, clientela);
    //setter y getter
+   float getcosteruta ();
+   vector < vector <cliente> > getruta ();
    void generarclientespordia ();
+   float generarcosterutaparcial (vector <cliente>);
+   void generarcosteruta (vector < vector <cliente> >);
    void restarvisita (int);
-   int visitasrestantesruta ();
-   void actualizarvisitasruta ();
+   int visitasrutarestantes ();
+   void actualizarvisitasruta (int);
    int numeroaleatorio (int);
    vector <cliente> ordenarposibilidades (int, vector <cliente>);
    vector <cliente> generarposibilidades ();

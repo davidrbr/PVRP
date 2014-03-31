@@ -14,7 +14,7 @@ CUST NO.   XCOORD.   YCOORD.   DEMAND    NDIASRECOGIDA    TIEMPOREQUERIDO
     4      55         20         19          1               1.9
     5      15         30         26          1               2.6
     6      25         30          3          4               0.3
-    7      20         50          5          6               0.5
+    7      20         50          5          5               0.5
     8      10         43          9          1               0.9
     9      55         60         16          2               1.6
    10      30         60         16          3               1.6
@@ -23,7 +23,7 @@ CUST NO.   XCOORD.   YCOORD.   DEMAND    NDIASRECOGIDA    TIEMPOREQUERIDO
    13      30         25         23          2               2.3
    14      15         10         20          3               2
    15      30          5          8          5               0.8
-   16      10         20         19          6               1.9
+   16      10         20         19          5               1.9
    17       5         30          2          4               0.2
    18      20         40         12          2               1.2
    19      15         60         17          2               1.7
