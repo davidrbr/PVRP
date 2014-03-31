@@ -1,1 +1,3 @@
-PVRP funcionando con ventanas de tiempo, fichero solomon a mi manera para añadirle las ventanas de tiempo y el periodo de planificación del pvrp, aunque también podría pasárselo preguntandoselo al usuario o por linea de comando y así no tendría que modificar el fichero solomon original.
+﻿PVRP funcionando con ventanas de tiempo, fichero solomon a mi manera para añadirle las ventanas de tiempo y el periodo de planificación del pvrp, aunque también podría pasárselo preguntandoselo al usuario o por linea de comando y así no tendría que modificar el fichero solomon original.
+
+Edito: los ficheros solomon no están pensados para el PVRP, no me sirven ya que de entrada no dice cuántos días hay que recoger a cada cliente, precisamente por ese cuántos días hay que recoger a cada cliente es necesario que el periodo de planificación venga indicado en el fichero de entrada,...
