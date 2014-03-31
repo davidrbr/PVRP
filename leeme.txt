@@ -1,6 +1,1 @@
-Tatatataaaa!!!!
-
-
-Por fin está funcionando el PVRP!!! :3
-
-Hay que quitarle chivatos, pero hace tal cual el PVRP del libro ^3^
+PVRP funcionando con ventanas de tiempo, fichero solomon a mi manera para añadirle las ventanas de tiempo y el periodo de planificación del pvrp, aunque también podría pasárselo preguntandoselo al usuario o por linea de comando y así no tendría que modificar el fichero solomon original.

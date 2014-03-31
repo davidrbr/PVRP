@@ -156,6 +156,7 @@ public:
    //setter y getter
    float getcosteruta ();
    vector < vector <cliente> > getruta ();
+   void mostrarclientespordia ();
    void generarclientespordia ();
    float generarcosterutaparcial (vector <cliente>);
    void generarcosteruta (vector < vector <cliente> >);

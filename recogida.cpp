@@ -273,9 +273,7 @@ void clientela :: seleccionarunaposibilidadporcliente () {
    srand((unsigned)time(NULL));
    for (int i = 1; i < totalclientes.size(); i++) {
       int npos = totalclientes[i].getnposibilidades();
-      cout << "totalclientes[" << i << "].getnposibilidades() = " << totalclientes[i].getnposibilidades() << endl;
       int num = rand()%npos;
-      cout << "El numero es = " << num << endl;
       posibilidadcliente.push_back(totalclientes[i].getposibilidad(num));
    };
 };
@@ -622,79 +620,32 @@ vector < vector <cliente> > ruteo2 :: getruta () {
    return ruta;
 };
 
+void ruteo2 :: mostrarclientespordia () {
+   for (int i = 0; i < clientespordia.size(); i++) {
+      for (int j = 0; j < clientespordia[i].size(); j++)
+         cout << clientespordia[i][j] << " ";
+      cout << endl;
+   };
+};
+
 void ruteo2 :: generarclientespordia () {
    vector < vector <int> > posibilidadcliente = laclientela.getposibilidadcliente();
    vector <int> undia;
    int contador = 1;
    while (contador <= laflota.getperiodoplanificacion()) {
       undia.clear();
-      cout << "undia.size() = " << undia.size() << endl;
       for (int i = 0; i < posibilidadcliente.size(); i++) {
          for (int j = 0; j < posibilidadcliente[i].size(); j++) {
-            cout << posibilidadcliente[i][j] << " ";
-            cout << "PPCC[" << i << "].size() = " << posibilidadcliente[i].size() << endl;
+            //cout << posibilidadcliente[i][j] << " ";
             if (posibilidadcliente[i][j] == contador)
                undia.push_back(i+1);
          };
-         cout << endl;
+         //cout << endl;
       };
       contador++;
       clientespordia.push_back(undia);
    };
-   for (int i = 0; i < clientespordia.size(); i++) {
-      for (int j = 0; j < clientespordia[i].size(); j++) {
-         cout << clientespordia[i][j] << " ";
-      };
-      cout << endl;
-   };
 };
-      
-      /*
-   
-   int periodo = laflota.getperiodoplanificacion();
-   vector <int> plandia;
-   for (int i = 1; i < periodo+1; i++) {
-      //cout << "pc[" << i << "].size() = " << posibilidadcliente.size() << endl;
-      for (int j = 0; j < posibilidadcliente.size(); j++) {
-         //cout << "PPposibilidadcliente[" << j << "].size() = " << posibilidadcliente.size() << endl;
-         for (int k = 0; k < posibilidadcliente[j].size(); k++){
-            if (posibilidadcliente[j][k] == i)
-               plandia.push_back(j);
-            //cout << "posibilidadcliente[" << j << "].size() = " << posibilidadcliente.size() << endl;
-         };
-      };
-      //clientespordia.push_back(plandia);
-      //cout << "clientespordia.size() = " << clientespordia.size() << endl;
-   }
-};
-
-void ruteo2 :: generarclientespordia () {
-   vector < vector <int> > diascadacliente = laclientela.getposibilidadcliente();
-   
-      for (int i = 0; i < diascadacliente.size(); i++) {
-      for (int j = 0; j < diascadacliente[i].size(); j++) {
-         cout << diascadacliente[i][j] << " ";
-         cout << "diascadacliente[i].size() = " << diascadacliente[i].size() << endl;
-      };
-      cout << endl;
-   };
-   
-   vector <int> undia;                  //en el siguiente for empiezo en 1 porque lo que hay en 0 no me interesa, es el origen, por esa razón, termino en < y no en <=, porque si pusiera <= me pasaría del tamaño
-   int contador = 1;
-   while (contador <= laflota.getperiodoplanificacion()) {
-      undia.empty();
-      for (int i = 1; i < diascadacliente.size(); i++)
-         for (int j = 0; j < diascadacliente[i].size(); j++) {
-            if (diascadacliente[i][j] == contador)
-               undia.push_back(i);
-            cout << "diascadacliente[" << i << "].size() = " << diascadacliente.size() << endl;
-         };
-      contador++;
-      //cout << "diascadacliente.size() = " << diascadacliente.size() << endl;
-      //cout << "undia.size() = " << undia.size() << endl;
-      clientespordia.push_back(undia);
-   };
-};*/
 
 float ruteo2 :: generarcosterutaparcial (vector <cliente> ru) {
    float aux = 0.0;
@@ -722,27 +673,9 @@ int ruteo2 :: visitasrutarestantes () {
    return aux;
 };
 
-/*void ruteo2 :: actualizarvisitasruta (int dia) {
-   cout << "dia = " << dia << endl;
-   cout << "clientes: " << clientespordia[dia].size() << endl;
-   for (int i = 1; i < clientespordia[dia].size(); i++) {               //por cada cliente
-      for (int j = 1; j < laclientela.getnclientes(); j++)              //compruebo los clientes que hay planificados para ese día
-         if (clientespordia[dia][j] == i)                               //si alguno de los que tocan para ese día coinciden con el cliente que estamos evaluando (i), le doy valor 1
-            visitasruta[i] = 1;
-   };
-   
-   for (int i = 1; i < laclientela.getnclientes(); i++) {               //por cada cliente
-      for (int j = 0; j < clientespordia[dia].size(); j++)              //compruebo los clientes que hay planificados para ese día
-         if (clientespordia[dia][j] == i)                               //si alguno de los que tocan para ese día coinciden con el cliente que estamos evaluando (i), le doy valor 1
-            visitasruta[i] = 1;
-   };
-};*/
-
 void ruteo2 :: actualizarvisitasruta (int dia) {
-   for (int i = 1; i < laclientela.getnclientes(); i++) {            //empiezo en 1 porque el origen siempre va a ser 0, no me interesa
+   for (int i = 1; i < laclientela.getnclientes(); i++) {
       for (int j = 0; j < clientespordia[dia].size(); j++) {
-         //cout << "clientespordia.size() = " << clientespordia.size() << "   clientespordia[dia].size() = " << clientespordia[dia].size() << endl;
-         //cout << "clientespordia[" << dia << "][" << j << "] = " << clientespordia[dia][j] << "  i = " << i << endl;
          if (clientespordia[dia][j] == i)
             visitasruta[i] = 1;
       };
@@ -765,7 +698,7 @@ vector <cliente> ruteo2 :: ordenarposibilidades (int a, vector <cliente> sinorde
    float distancia;
    cliente minimo;
    int posicion;
-   for (int i = 0; i < sinordenar.size()-1; i++) {  //por si hubiera que tenerlo en cuenta en algún momento, voy a ir eliminando dentro del primer bucle for elementos de sinordenar, así que va a ir siendo cada vez más pequeño
+   for (int i = 0; i < sinordenar.size()-1; i++) {
       float distanciaminima = 999;
       for (int j = 0; j < sin.size(); j++) {
          if (a != sin[j].getcid()) {
@@ -805,8 +738,7 @@ vector <cliente> ruteo2 :: generarrutaparcial (int n) {
    int naleatorio;
    bool salir = false;
    //while ((capacidadaux < capacidadvehiculo) && (horasaux < horastrabajo) && (visitasrutarestantes() > 0) && (!salir)) {     //Si queremos tener en cuenta las horas de trabajo
-      while ((capacidadaux < capacidadvehiculo) && (visitasrutarestantes() > 0) && (!salir)) {  //si no queremos tener en cuenta las horas de trabajo, sino sólo la capacidad
-
+   while ((capacidadaux < capacidadvehiculo) && (visitasrutarestantes() > 0) && (!salir)) {  //si no queremos tener en cuenta las horas de trabajo, sino sólo la capacidad
       vector <cliente> cliaux = generarposibilidades();
       if (cliaux.size() > 1)
          cliaux = ordenarposibilidades(numcliente, cliaux);
@@ -854,43 +786,6 @@ void ruteo2 :: mostrarruta () {
 
 
 int main () {
-   /*flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
-   clientela miclientela;     //creo un elemento de la clase clientela que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
-   
-   cout << "Introduzca el nombre del fichero de entrada: ";
-   string nombre;
-   //cin >> nombre;
-   nombre = "ficheroprueba.txt";
-   
-   cout << endl << "Extrayendo datos del fichero..." << endl;
-   leerfichero lectura (nombre, miflota, miclientela);
-   
-   //miflota.mostrarflota();
-   //miclientela.mostrarclientela();
-   
-   cout << "Generando matriz de distancias..." << endl;
-   miclientela.generarmatrizdistancias();
-   */
-   /*
-   miclientela.mostrarmatrizdistancias();
-   vector <float> cosa = miclientela.devolverfilamatrizd(5);
-   for (int i = 0; i < cosa.size(); i++)
-      cout << "cosa[" << i << "]: " << cosa[i] << endl;
-   */
-   /*
-   cout << "Indique el número de iteraciones que desea realizar: ";
-   int iteraciones;
-   //cin >> iteraciones;
-   iteraciones = 5;
-   
-   ruteo miruteo(miflota, miclientela, iteraciones);
-   cout << endl << "Generando ruta óptima..." << endl;
-   //miruteo.generarrutatotal();
-   miruteo.generarrutaoptima();
-   miruteo.mostrarrutaoptima();
-   cout << "Coste de la ruta óptima = " << miruteo.getcosterutaoptima() << endl;
-   return 0;*/
-   
    flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    clientela miclientela;     //creo un elemento de la clase clientela que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    
@@ -907,11 +802,11 @@ int main () {
    cout << "Generando calendarios de planificación..." << endl;
    miclientela.generartodaslasposibilidades(miflota.getperiodoplanificacion());
    miclientela.seleccionarunaposibilidadporcliente();
-   miclientela.mostrarposibilidadcliente();
+   //miclientela.mostrarposibilidadcliente();
    
    ruteo2 miruteo(miflota, miclientela);
    miruteo.generarclientespordia();
-   cout << endl << "Generando ruta óptima..." << endl;
+   cout << "Generando ruta óptima..." << endl;
    miruteo.generarruta();
    miruteo.mostrarruta();
    miruteo.generarcosteruta(miruteo.getruta());
