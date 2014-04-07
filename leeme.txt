@@ -1,2 +1,1 @@
-En esta actualización he incluido una nueva lectura de ficheros para admitir otro tipo de ficheros extraídos de la web indicada en el código.
-En otra actualización permitiré coordenadas negativas y float, ya que en algunos ficheros se puede dar el caso.
+Ya admite cálculos con coordenadas negativas y con decimales.

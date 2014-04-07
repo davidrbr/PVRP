@@ -83,8 +83,8 @@ leerfichero2 :: leerfichero2 (string name, flota & tveh, clientela & tcli) { //l
    float horastr = 0.0;
    int periodoplan = 0;
    int id = 0;
-   int x = 0;
-   int y = 0;
+   float x = 0;
+   float y = 0;
    int dem = 0;
    int nd = 0;
    float tr = 0.0;
