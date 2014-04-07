@@ -93,12 +93,22 @@ public:
    void mostrarflota ();
 };
 
-class leerfichero {
+class leerfichero {     //para ficheros Solomon
 private:
    string nombrefichero;
 public:
    leerfichero ();
    leerfichero (string, flota &, clientela &);
+   void setnombrefichero (string);
+   string getnombrefichero ();
+};
+
+class leerfichero2 {    //para ficheros PVRP Cordeau (http://www.bernabe.dorronsoro.es/vrp/)
+private:
+   string nombrefichero;
+public:
+   leerfichero2 ();
+   leerfichero2 (string, flota &, clientela &);
    void setnombrefichero (string);
    string getnombrefichero ();
 };

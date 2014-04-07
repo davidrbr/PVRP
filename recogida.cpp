@@ -28,7 +28,7 @@ leerfichero :: leerfichero (string name, flota & tveh, clientela & tcli) { //le 
    fe >> aux;
    fe >> aux;
    fe >> numvehiculos;          //lee el número de vehículos
-   fe >> capacidad;             //lee la capacidad de caca vehículo
+   fe >> capacidad;             //lee la capacidad de cada vehículo
    fe >> horastr;               //lee las horas de trabajo de cada vehículo
    fe >> periodoplan;           //lee el número de días que conforman el periodo de planificación
    
@@ -65,6 +65,69 @@ void leerfichero :: setnombrefichero (string name) {
 };
 
 string leerfichero :: getnombrefichero () {
+   return nombrefichero;
+};
+
+
+/* Clase leerfichero */
+
+leerfichero2 :: leerfichero2 () {
+   
+};
+
+leerfichero2 :: leerfichero2 (string name, flota & tveh, clientela & tcli) { //le tengo que pasar una variable flota y clientela desde el main
+   string aux;
+   char aux2[100];
+   int numvehiculos = 0;
+   int capacidad = 0;
+   float horastr = 0.0;
+   int periodoplan = 0;
+   int id = 0;
+   int x = 0;
+   int y = 0;
+   int dem = 0;
+   int nd = 0;
+   float tr = 0.0;
+   
+   nombrefichero = name;
+   ifstream fe(nombrefichero.c_str());
+   fe >> aux;                   //lee el tipo de fichero que es (no lo usamos)
+   fe >> numvehiculos;          //lee el número de vehículos
+   fe >> aux;                   //lee el número de clientes (no lo necesito)
+   fe >> periodoplan;           //lee el número de días que conforman el periodo de planificación
+   
+   for (int i = 0; i < periodoplan; i++) {
+      fe >> horastr;            //lee las horas de trabajo de cada vehículo
+      fe >> capacidad;          //lee la capacidad de cada vehículo
+   };
+   
+   tveh.crearflota(numvehiculos, capacidad, horastr);
+   tveh.setperiodoplanificacion(periodoplan);
+   
+   
+   int i = 0;
+   
+   while (!fe.eof()) {               //por cada una de las filas del fichero hasta que se termine dicho fichero, while not end of file
+      fe >> id;                      //cojo seis elementos, los seis atributos del cliente
+      fe >> x;
+      fe >> y;
+      fe >> tr;
+      fe >> dem;
+      fe >> nd;
+      fe.getline(aux2, 100);
+      
+      cliente caux (id, x, y, dem, nd, tr);         //creo un cliente auxiliar
+      tcli.addcliente(caux);                        //introduzco el cliente en el vector de tcli a través de la función add cliente
+   };
+   
+   fe.close();
+};
+
+void leerfichero2 :: setnombrefichero (string name) {
+   nombrefichero = name;
+};
+
+string leerfichero2 :: getnombrefichero () {
    return nombrefichero;
 };
 
@@ -789,12 +852,21 @@ int main () {
    flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    clientela miclientela;     //creo un elemento de la clase clientela que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    
+   /*
    cout << "Introduzca el nombre del fichero de entrada: ";
    string nombre;
    nombre = "ficheroprueba.txt";
    
    cout << endl << "Extrayendo datos del fichero..." << endl;
    leerfichero lectura (nombre, miflota, miclientela);
+   */
+   
+   cout << "Introduzca el nombre del fichero de entrada: ";
+   string nombre;
+   nombre = "p12";
+   
+   cout << endl << "Extrayendo datos del fichero..." << endl;
+   leerfichero2 lectura (nombre, miflota, miclientela);
    
    cout << "Generando matriz de distancias..." << endl;
    miclientela.generarmatrizdistancias();
