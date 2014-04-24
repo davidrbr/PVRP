@@ -130,7 +130,7 @@ leerfichero2 :: leerfichero2 (string name, flota & tveh, clientela & tcli) { //l
       tcli.addcliente(caux);                        //introduzco el cliente en el vector de tcli a través de la función add cliente
       dias.clear();
    };
-   
+
    fe.close();
 };
 
@@ -361,10 +361,8 @@ float clientela :: devolverdistanciadospuntos (int a, int b) {
 };
 
 void clientela :: rellenarposibilidadcliente () {
-   for (int i = 0; i < totalclientes.size(); i++) {
-      totalclientes[i].mostrardiasrecogida();
+   for (int i = 0; i < totalclientes.size(); i++)
       posibilidadcliente.push_back(totalclientes[i].getdiasrecogida());
-   };
 };
 
 /*void clientela :: generartodaslasposibilidades (int periodplan) {
@@ -740,7 +738,7 @@ void ruteo2 :: generarclientespordia () {
       for (int i = 0; i < posibilidadcliente.size(); i++)
          for (int j = 0; j < posibilidadcliente[i].size(); j++) {
             if (posibilidadcliente[i][j] == contador)
-               undia.push_back(i+1);
+               undia.push_back(i);
          };
       contador++;
       clientespordia.push_back(undia);
@@ -903,10 +901,10 @@ int main () {
    //miclientela.generartodaslasposibilidades(miflota.getperiodoplanificacion());
    //miclientela.seleccionarunaposibilidadporcliente();
    miclientela.rellenarposibilidadcliente();
-   miclientela.mostrarposibilidadcliente();
+   //miclientela.mostrarposibilidadcliente();
    ruteo2 miruteo(miflota, miclientela);
    miruteo.generarclientespordia();
-   miruteo.mostrarclientespordia();
+   //miruteo.mostrarclientespordia();
    cout << "Generando ruta óptima..." << endl;
    miruteo.generarruta();
    miruteo.mostrarruta();

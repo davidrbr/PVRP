@@ -1,1 +1,1 @@
-Intentando que coja el nuevo formato de fichero en la que se le indica por cada cliente el número de días que desea ser visitado y qué dias concretos quiere.
+Ya coge bien los datos del fichero de entrada y genera bien las rutas de cada día.
