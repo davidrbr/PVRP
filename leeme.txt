@@ -1,1 +1,1 @@
-Ya admite cálculos con coordenadas negativas y con decimales.
+Intentando que coja el nuevo formato de fichero en la que se le indica por cada cliente el número de días que desea ser visitado y qué dias concretos quiere.

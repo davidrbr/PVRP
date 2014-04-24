@@ -15,27 +15,32 @@ private:
    int demanda;
    int ndiasrecogida;
    float trequerido;
+   vector <int> diasrecogida;
    vector < vector <int> > posibilidades;     //almacena todas las combinaciones de visitas posibles dentro del periodo de planificación (cada vector<int> es una combinación)
 public:
    cliente ();
    cliente (int id, int x, int y, int dem, int nd, float tr);
+   cliente (int id, int x, int y, int dem, int nd, vector <int> dias);
    void setcid (int);
    void setxcord (int);
    void setycord (int);
    void setdemanda (int);
    void setndiasrecogida (int);
    void settrequerido (float);
+   void setdiasrecogida (vector <int>);
    int getcid ();
    int getxcord ();
    int getycord ();
    int getdemanda ();
    int getndiasrecogida ();
    float gettrequerido ();
+   vector <int> getdiasrecogida ();
    int getnposibilidades ();
    vector <int> getposibilidad (int);
-   bool comprobarcad (string);
-   void perm (vector<vector<int> > &, vector<string>, string, int, int); //se le pasa el vector donde se almacenarán las posibilidades definitivas, periodo de planificación en string (hasta 9), un sting para la recursividad (""), ndíasderecogida, periodo de planificación) 
-   void generarposibilidades (int);     //se le pasa el periodo de planificación
+   void mostrardiasrecogida ();
+   //bool comprobarcad (string);
+   //void perm (vector<vector<int> > &, vector<string>, string, int, int); //se le pasa el vector donde se almacenarán las posibilidades definitivas, periodo de planificación en string (hasta 9), un sting para la recursividad (""), ndíasderecogida, periodo de planificación) 
+   //void generarposibilidades (int);     //se le pasa el periodo de planificación
 };
 
 class clientela {
@@ -56,8 +61,9 @@ public:
    void mostrarmatrizdistancias ();
    vector <float> devolverfilamatrizd (int);
    float devolverdistanciadospuntos (int, int);
-   void generartodaslasposibilidades (int);
-   void seleccionarunaposibilidadporcliente ();
+   void rellenarposibilidadcliente ();
+   /*void generartodaslasposibilidades (int);
+   void seleccionarunaposibilidadporcliente ();*/
    void mostrarposibilidadcliente ();
 };
 
@@ -93,7 +99,7 @@ public:
    void mostrarflota ();
 };
 
-class leerfichero {     //para ficheros Solomon
+class leerfichero {
 private:
    string nombrefichero;
 public:
@@ -103,7 +109,7 @@ public:
    string getnombrefichero ();
 };
 
-class leerfichero2 {    //para ficheros PVRP Cordeau (http://www.bernabe.dorronsoro.es/vrp/)
+class leerfichero2 {
 private:
    string nombrefichero;
 public:

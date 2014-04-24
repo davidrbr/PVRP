@@ -28,7 +28,7 @@ leerfichero :: leerfichero (string name, flota & tveh, clientela & tcli) { //le 
    fe >> aux;
    fe >> aux;
    fe >> numvehiculos;          //lee el número de vehículos
-   fe >> capacidad;             //lee la capacidad de cada vehículo
+   fe >> capacidad;             //lee la capacidad de caca vehículo
    fe >> horastr;               //lee las horas de trabajo de cada vehículo
    fe >> periodoplan;           //lee el número de días que conforman el periodo de planificación
    
@@ -69,7 +69,7 @@ string leerfichero :: getnombrefichero () {
 };
 
 
-/* Clase leerfichero */
+/* Clase leerfichero2 */
 
 leerfichero2 :: leerfichero2 () {
    
@@ -77,33 +77,42 @@ leerfichero2 :: leerfichero2 () {
 
 leerfichero2 :: leerfichero2 (string name, flota & tveh, clientela & tcli) { //le tengo que pasar una variable flota y clientela desde el main
    string aux;
-   char aux2[100];
    int numvehiculos = 0;
    int capacidad = 0;
    float horastr = 0.0;
    int periodoplan = 0;
    int id = 0;
-   float x = 0;
-   float y = 0;
+   int x = 0;
+   int y = 0;
    int dem = 0;
    int nd = 0;
-   float tr = 0.0;
+   int dia = 0;
+   vector <int> dias;
    
    nombrefichero = name;
    ifstream fe(nombrefichero.c_str());
-   fe >> aux;                   //lee el tipo de fichero que es (no lo usamos)
+   fe >> aux;                   //lee el nombre del fichero, situado en la primera línea del fichero
+   fe >> aux;                   //lee la palabra VEHICLE
+   fe >> aux;                   //lee la siguiente línea, también son palabras
+   fe >> aux;
+   fe >> aux;
+   fe >> aux;
    fe >> numvehiculos;          //lee el número de vehículos
-   fe >> aux;                   //lee el número de clientes (no lo necesito)
+   fe >> capacidad;             //lee la capacidad de caca vehículo
+   fe >> horastr;               //lee las horas de trabajo de cada vehículo
    fe >> periodoplan;           //lee el número de días que conforman el periodo de planificación
-   
-   for (int i = 0; i < periodoplan; i++) {
-      fe >> horastr;            //lee las horas de trabajo de cada vehículo
-      fe >> capacidad;          //lee la capacidad de cada vehículo
-   };
    
    tveh.crearflota(numvehiculos, capacidad, horastr);
    tveh.setperiodoplanificacion(periodoplan);
    
+   fe >> aux;                   //lee la palabra CUSTOMER
+   fe >> aux;                   //lee la siguiente línea, también son palabras
+   fe >> aux;
+   fe >> aux;
+   fe >> aux;
+   fe >> aux;
+   fe >> aux;
+   fe >> aux;
    
    int i = 0;
    
@@ -111,13 +120,15 @@ leerfichero2 :: leerfichero2 (string name, flota & tveh, clientela & tcli) { //l
       fe >> id;                      //cojo seis elementos, los seis atributos del cliente
       fe >> x;
       fe >> y;
-      fe >> tr;
       fe >> dem;
       fe >> nd;
-      fe.getline(aux2, 100);
-      
-      cliente caux (id, x, y, dem, nd, tr);         //creo un cliente auxiliar
+      for (int i = 0; i < nd; i++) {
+         fe >> dia;
+         dias.push_back(dia);
+      };
+      cliente caux (id, x, y, dem, nd, dias);       //creo un cliente auxiliar
       tcli.addcliente(caux);                        //introduzco el cliente en el vector de tcli a través de la función add cliente
+      dias.clear();
    };
    
    fe.close();
@@ -147,6 +158,16 @@ cliente :: cliente (int id, int x, int y, int dem, int nd, float tr) {
    trequerido = tr;
 };
 
+cliente :: cliente (int id, int x, int y, int dem, int nd, vector <int> dias) {
+   cid = id;
+   xcord = x;
+   ycord = y;
+   demanda = dem;
+   ndiasrecogida = nd;
+   diasrecogida = dias;
+};
+
+
 void cliente :: setcid (int a) {
    cid = a;
 };
@@ -169,6 +190,10 @@ void cliente :: setndiasrecogida (int a) {
 
 void cliente :: settrequerido (float a) {
    trequerido = a;
+};
+
+void cliente :: setdiasrecogida (vector <int> a) {
+   diasrecogida = a;
 };
 
 int cliente :: getcid () {
@@ -195,6 +220,10 @@ float cliente :: gettrequerido () {
    return trequerido;
 };
 
+vector <int> cliente :: getdiasrecogida () {
+   return diasrecogida;
+};
+
 int cliente :: getnposibilidades () {
    return posibilidades.size();
 };
@@ -203,7 +232,13 @@ vector <int> cliente :: getposibilidad (int n) {
    return posibilidades[n];
 };
 
-bool cliente :: comprobarcad (string cad) {
+void cliente :: mostrardiasrecogida () {
+   for (int i = 0 ; i < diasrecogida.size(); i++)
+      cout << diasrecogida[i] << "   ";
+   cout << endl;
+};
+
+/*bool cliente :: comprobarcad (string cad) {
    if (cad.length() > 1)
       for (int i = 1; i < cad.length(); i++) {
         int a, b;
@@ -215,7 +250,6 @@ bool cliente :: comprobarcad (string cad) {
          if (a < b)
             return false;
       };
-      
    return true;
 }
 
@@ -249,8 +283,7 @@ void cliente :: generarposibilidades (int periodplan) {
    vector < vector <int> > listadoaux;
    perm (listadoaux, atexto, "", ndiasrecogida, periodplan);
    posibilidades = listadoaux;
-};
-
+};*/
 
 
 /* Clase clientela */
@@ -327,7 +360,14 @@ float clientela :: devolverdistanciadospuntos (int a, int b) {
    return matrizdistancias[a][b];
 };
 
-void clientela :: generartodaslasposibilidades (int periodplan) {
+void clientela :: rellenarposibilidadcliente () {
+   for (int i = 0; i < totalclientes.size(); i++) {
+      totalclientes[i].mostrardiasrecogida();
+      posibilidadcliente.push_back(totalclientes[i].getdiasrecogida());
+   };
+};
+
+/*void clientela :: generartodaslasposibilidades (int periodplan) {
    for (int i = 0; i < totalclientes.size(); i++)
       totalclientes[i].generarposibilidades(periodplan);
 };
@@ -339,7 +379,7 @@ void clientela :: seleccionarunaposibilidadporcliente () {
       int num = rand()%npos;
       posibilidadcliente.push_back(totalclientes[i].getposibilidad(num));
    };
-};
+};*/
 
 void clientela :: mostrarposibilidadcliente () {
    for (int i = 0; i < posibilidadcliente.size(); i++) {
@@ -697,14 +737,11 @@ void ruteo2 :: generarclientespordia () {
    int contador = 1;
    while (contador <= laflota.getperiodoplanificacion()) {
       undia.clear();
-      for (int i = 0; i < posibilidadcliente.size(); i++) {
+      for (int i = 0; i < posibilidadcliente.size(); i++)
          for (int j = 0; j < posibilidadcliente[i].size(); j++) {
-            //cout << posibilidadcliente[i][j] << " ";
             if (posibilidadcliente[i][j] == contador)
                undia.push_back(i+1);
          };
-         //cout << endl;
-      };
       contador++;
       clientespordia.push_back(undia);
    };
@@ -852,18 +889,9 @@ int main () {
    flota miflota;             //creo un elemento de la clase flota que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    clientela miclientela;     //creo un elemento de la clase clientela que se lo paso al constructor de leerfichero y le doy valor a su vector dentro
    
-   /*
    cout << "Introduzca el nombre del fichero de entrada: ";
    string nombre;
    nombre = "ficheroprueba.txt";
-   
-   cout << endl << "Extrayendo datos del fichero..." << endl;
-   leerfichero lectura (nombre, miflota, miclientela);
-   */
-   
-   cout << "Introduzca el nombre del fichero de entrada: ";
-   string nombre;
-   nombre = "p12";
    
    cout << endl << "Extrayendo datos del fichero..." << endl;
    leerfichero2 lectura (nombre, miflota, miclientela);
@@ -872,12 +900,13 @@ int main () {
    miclientela.generarmatrizdistancias();
    
    cout << "Generando calendarios de planificación..." << endl;
-   miclientela.generartodaslasposibilidades(miflota.getperiodoplanificacion());
-   miclientela.seleccionarunaposibilidadporcliente();
-   //miclientela.mostrarposibilidadcliente();
-   
+   //miclientela.generartodaslasposibilidades(miflota.getperiodoplanificacion());
+   //miclientela.seleccionarunaposibilidadporcliente();
+   miclientela.rellenarposibilidadcliente();
+   miclientela.mostrarposibilidadcliente();
    ruteo2 miruteo(miflota, miclientela);
    miruteo.generarclientespordia();
+   miruteo.mostrarclientespordia();
    cout << "Generando ruta óptima..." << endl;
    miruteo.generarruta();
    miruteo.mostrarruta();
