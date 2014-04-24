@@ -16,7 +16,7 @@ private:
    int ndiasrecogida;
    float trequerido;
    vector <int> diasrecogida;
-   vector < vector <int> > posibilidades;     //almacena todas las combinaciones de visitas posibles dentro del periodo de planificación (cada vector<int> es una combinación)
+   vector < vector <int> > posibilidades;
 public:
    cliente ();
    cliente (int id, int x, int y, int dem, int nd, float tr);
@@ -38,9 +38,6 @@ public:
    int getnposibilidades ();
    vector <int> getposibilidad (int);
    void mostrardiasrecogida ();
-   //bool comprobarcad (string);
-   //void perm (vector<vector<int> > &, vector<string>, string, int, int); //se le pasa el vector donde se almacenarán las posibilidades definitivas, periodo de planificación en string (hasta 9), un sting para la recursividad (""), ndíasderecogida, periodo de planificación) 
-   //void generarposibilidades (int);     //se le pasa el periodo de planificación
 };
 
 class clientela {
@@ -62,8 +59,6 @@ public:
    vector <float> devolverfilamatrizd (int);
    float devolverdistanciadospuntos (int, int);
    void rellenarposibilidadcliente ();
-   /*void generartodaslasposibilidades (int);
-   void seleccionarunaposibilidadporcliente ();*/
    void mostrarposibilidadcliente ();
 };
 
@@ -109,55 +104,7 @@ public:
    string getnombrefichero ();
 };
 
-class leerfichero2 {
-private:
-   string nombrefichero;
-public:
-   leerfichero2 ();
-   leerfichero2 (string, flota &, clientela &);
-   void setnombrefichero (string);
-   string getnombrefichero ();
-};
-
 class ruteo {
-private:
-   flota laflota;
-   clientela laclientela;
-   vector < vector <cliente> > rutaoptima;
-   vector <int> vehiculosrutaoptima;
-   vector <int> vehiculosparcial;
-   float costerutaoptima;
-   vector <int> visitasintocable;
-   vector <int> visitastotal;
-   vector <int> visitasruta;
-   int niteraciones;
-public:
-   ruteo ();
-   ruteo (flota, clientela, int);
-   void reset ();
-   void setrutaoptima (vector < vector <cliente> >);
-   void setcosterutaoptima (float);
-   vector < vector <cliente> > getrutaoptima ();
-   float getcosterutaoptima ();
-   vector <cliente> getrutavehiculoconcreto (int);
-   float generarcosterutaparcial (vector <cliente>);
-   float generarcosterutatotal (vector < vector <cliente> >);
-   int numeroaleatorio (int);
-   void initvisitastotal ();
-   void initvisitastotal2 ();
-   void initvisitasruta ();
-   void restarvisita (int);
-   int visitasrestantes ();
-   int visitasrestantesruta ();
-   vector <cliente> ordenarposibilidades (int, vector <cliente>);
-   vector <cliente> generarposibilidades ();
-   vector <cliente> generarrutaparcial (int);
-   vector < vector <cliente> > generarrutatotal ();
-   void generarrutaoptima ();
-   void mostrarrutaoptima ();
-};
-
-class ruteo2 {
 private:
    flota laflota;
    clientela laclientela;
@@ -167,9 +114,8 @@ private:
    vector < vector <int> > clientespordia;
    vector <int> visitasruta;
 public:
-   ruteo2 ();
-   ruteo2 (flota, clientela);
-   //setter y getter
+   ruteo ();
+   ruteo (flota, clientela);
    float getcosteruta ();
    vector < vector <cliente> > getruta ();
    void mostrarclientespordia ();
